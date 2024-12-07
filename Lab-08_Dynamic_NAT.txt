@@ -1,0 +1,45 @@
+Router-1---------
+-----------------
+en
+conf t
+hostname R1
+
+int fa0/0
+ ip address 192.168.0.1 255.255.255.0
+ ip nat inside
+ no shut
+ exit
+
+int fa1/0
+ ip address 30.0.0.1 255.0.0.0
+ ip nat outside
+ no shut
+ exit
+
+ip route 0.0.0.0 0.0.0.0 fa1/0
+
+access-list 1 permit 192.168.0.0 0.0.0.255
+ip nat pool test 50.0.0.2 50.0.0.5 netmask 255.0.0.0
+ip nat inside source list 1 pool test
+
+exit
+
+****************************
+Router-2-----------------
+ 
+en
+conf t
+hostname R2
+
+int fa0/0
+ ip address 30.0.0.2 255.0.0.0
+ no shut
+ exit
+
+int fa1/0
+ ip address 20.0.0.1 255.0.0.0
+ no shut
+ exit
+
+ip route 0.0.0.0 0.0.0.0 fa0/0
+exit

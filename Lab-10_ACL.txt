@@ -1,0 +1,56 @@
+Lab-10_ACL
+**************
+Router-1
+**************
+en
+conf t
+int fa0/0
+ip address 192.168.10.1 255.255.255.0
+no shut
+exit
+
+int fa1/0
+ip address 10.10.10.1 255.255.255.252
+no shut
+exit
+
+ip route 192.168.11.0 255.255.255.0 10.10.10.2
+
+
+access-list 101 deny ip 192.168.10.0 0.0.0.255 192.168.10.10 0.0.0.255
+access-list 101 permit ip any any
+
+
+
+int fa1/0
+ip access-group 101 out
+exit
+
+*************
+Router-2
+*************
+
+en
+conf t
+int fa0/0
+ip address 192.168.11.1 255.255.255.0
+no shut
+exit
+
+
+int fa1/0
+ip address 10.10.10.2 255.255.255.252
+no shut
+exit
+
+
+ip route 192.168.10.0 255.255.255.0 10.10.10.1
+
+
+access-list 102 deny ip 192.168.11.0 0.0.0.255 192.168.11.10 0.0.0.255
+access-list 102 permit ip any any
+
+
+int fa1/0
+ip access-group 102 in
+exit
